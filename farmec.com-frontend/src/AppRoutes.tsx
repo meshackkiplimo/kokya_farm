@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./layouts/layout";
 import HomePage from "./pages/HomePage";
-import AuthCallbackPage from "./pages/AuthCallbackPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import ManageRentPage from "./pages/ManageRentPage";
@@ -11,7 +10,9 @@ import SearchPage from "./pages/SearchPage";
 import RentPage from "./pages/RentPage"
 import DetailPage from "./pages/DetailPage";
 import OrderStatusPage from "./pages/OrderStatusPage";
-import BookPage  from "./pages/BookPage";
+import BookPage from "./pages/BookPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 const AppRoutes = () => {
   return (
@@ -24,7 +25,21 @@ const AppRoutes = () => {
           </Layout>
         }
       />
-      <Route path="/auth-callback" element={<AuthCallbackPage />} />
+      
+      {/* Auth Routes */}
+      <Route
+        path="/login"
+        element={
+          <LoginPage />
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <RegisterPage />
+        }
+      />
+
       <Route
         path="/search/:town"
         element={
@@ -37,15 +52,14 @@ const AppRoutes = () => {
         path="/detail/:rentId"
         element={
           <Layout showHero={false}>
-            {" "}
-            <DetailPage />{" "}
+            <DetailPage />
           </Layout>
         }
       />
       <Route
         path="/services"
         element={
-          <Layout >
+          <Layout>
             <ServicesPage />
           </Layout>
         }
@@ -53,11 +67,13 @@ const AppRoutes = () => {
       <Route
         path="/about"
         element={
-          <Layout >
+          <Layout>
             <AboutPage />
           </Layout>
         }
       />
+
+      {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route
           path="/order-status"
@@ -83,22 +99,20 @@ const AppRoutes = () => {
             </Layout>
           }
         />
-         <Route
+        <Route
           path="/rent"
           element={
             <Layout>
               <RentPage />
             </Layout>
-
           }
         />
-         <Route
+        <Route
           path="/book"
           element={
             <Layout>
               <BookPage />
             </Layout>
-            
           }
         />
       </Route>
@@ -107,4 +121,5 @@ const AppRoutes = () => {
     </Routes>
   );
 };
+
 export default AppRoutes;
