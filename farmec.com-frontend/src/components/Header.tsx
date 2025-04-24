@@ -4,15 +4,13 @@ import MainNav from "./MainNav";
 
 const Header = () => {
   return (
-    <div className="border-b-2 border-b-green-500 py-6">
+    <div className=" py-6">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex flex-col">
-          <Link to="/" className="text-3xl font-bold tracking-tight text-green-500">
-            Farmech.com
+          <Link to="/" className="text-3xl font-bold tracking-tight text-green-500 hover:text-yellow-700">
+            Farmech
           </Link>
-          <span className="text-2sm font-bold text-green-500">
-               Tunza mkulima
-          </span>
+         
         </div>
         
         <div className="md:hidden">
