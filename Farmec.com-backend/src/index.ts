@@ -1,15 +1,12 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
-
-// import myUserRoute from "./routes/MyUserRoute";
 import { v2 as cloudinary } from "cloudinary";
 import myRentRoute from "./routes/MyRentRoute";
 import rentRoute from "./routes/RentRoute";
 import orderRoute from "./routes/OrderRoute";
 import authRoute from "./routes/AuthRoute";
 import connectDB from "./config/db";
-
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -19,20 +16,24 @@ cloudinary.config({
 
 const app = express();
 
-app.use(cors());
+// Configure CORS to allow requests from frontend
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}));
 
 app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
 
 app.use(express.json());
 
-
-
-// app.use("/api/my/user", myUserRoute);
 app.use("/api/my/rent", myRentRoute);
 app.use("/api/rent", rentRoute);
 app.use("/api/order", orderRoute);
 app.use("/api/auth", authRoute);
+
 connectDB();
-app.listen(7000, () => {
-  console.log("server started on localhost:7000");
+
+const port = process.env.PORT || 7000;
+app.listen(port, () => {
+  console.log(`server started on localhost:${port}`);
 });

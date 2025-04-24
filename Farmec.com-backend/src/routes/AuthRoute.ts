@@ -8,7 +8,17 @@ const router = express.Router();
 // Validation middleware
 const registerValidationRules = [
   body("email").isEmail().withMessage("Must be a valid email"),
-  body("password").notEmpty().withMessage("Password is required"),
+  body("password")
+    .notEmpty().withMessage("Password is required")
+    .isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
+  body("confirmPassword")
+    .notEmpty().withMessage("Password confirmation is required")
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Passwords do not match");
+      }
+      return true;
+    }),
   body("name").trim().notEmpty().withMessage("Name cannot be empty"),
 ];
 

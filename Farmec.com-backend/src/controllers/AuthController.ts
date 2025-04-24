@@ -1,5 +1,12 @@
 import { Request, Response } from "express";
 import User from "../models/user";
+import jwt from "jsonwebtoken";
+
+const generateToken = (userId: string) => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET || 'your-secret-key', {
+    expiresIn: '24h',
+  });
+};
 
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
@@ -25,12 +32,21 @@ export const createUser = async (req: Request, res: Response) => {
 
     const newUser = new User({
       email,
-      password,
+      password, // In production, you should hash the password
       name
     });
     await newUser.save();
 
-    res.status(201).json(newUser);
+    const token = generateToken(newUser._id.toString());
+    
+    res.status(201).json({
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        name: newUser.name
+      },
+      token
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error creating user" });
@@ -46,11 +62,20 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    if (user.password !== password) {
+    if (user.password !== password) { // In production, you should compare hashed passwords
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    res.json(user);
+    const token = generateToken(user._id.toString());
+
+    res.json({
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name
+      },
+      token
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error logging in" });
@@ -69,7 +94,11 @@ export const updateUser = async (req: Request, res: Response) => {
     user.name = name;
     await user.save();
 
-    res.json(user);
+    res.json({
+      id: user._id,
+      email: user.email,
+      name: user.name
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error updating user" });

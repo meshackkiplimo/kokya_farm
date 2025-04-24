@@ -19,21 +19,39 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
-    // Check if user is logged in (e.g., check localStorage or session)
+    // Check if user is logged in
     const token = localStorage.getItem('auth_token');
     if (token) {
-      // TODO: Validate token with backend
-      setIsAuthenticated(true);
-      // TODO: Fetch and set user data
+      // Validate token with backend
+      fetch(`${API_BASE_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Token invalid');
+        })
+        .then((data) => {
+          setIsAuthenticated(true);
+          setUser(data);
+        })
+        .catch(() => {
+          localStorage.removeItem('auth_token');
+          setIsAuthenticated(false);
+          setUser(null);
+        });
     }
-  }, []);
+  }, [API_BASE_URL]);
 
   const login = async (email: string, password: string) => {
     try {
-      // TODO: Implement actual login API call
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -55,19 +73,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (name: string, email: string, password: string) => {
     try {
-      // TODO: Implement actual registration API call
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, confirmPassword: password }),
       });
 
       if (!response.ok) {
-        throw new Error('Registration failed');
+        const error = await response.json();
+        throw new Error(error.message || 'Registration failed');
       }
 
       const data = await response.json();
-      // Don't automatically log in after registration
       return data;
     } catch (error) {
       console.error('Registration error:', error);
