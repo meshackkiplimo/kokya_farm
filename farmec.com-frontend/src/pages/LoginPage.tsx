@@ -10,12 +10,27 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/register'); // Redirect to register page when login button is clicked
+    setError('');
+    setIsLoading(true);
+
+    try {
+      await login(email, password);
+      navigate('/'); // Redirect to home page on successful login
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Invalid email or password');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,6 +59,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1"
+                disabled={isLoading}
               />
             </div>
             <div>
@@ -57,12 +73,17 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1"
+                disabled={isLoading}
               />
             </div>
           </div>
 
-          <Button type="submit" className="w-full">
-            Sign in
+          <Button 
+            type="submit" 
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Signing in...' : 'Sign in'}
           </Button>
 
           <div className="text-center text-sm">
