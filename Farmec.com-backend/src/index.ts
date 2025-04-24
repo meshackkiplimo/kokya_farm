@@ -7,6 +7,7 @@ import { v2 as cloudinary } from "cloudinary";
 import myRentRoute from "./routes/MyRentRoute";
 import rentRoute from "./routes/RentRoute";
 import orderRoute from "./routes/OrderRoute";
+import authRoute from "./routes/AuthRoute";
 import connectDB from "./config/db";
 
 
@@ -30,6 +31,7 @@ app.use("/api/my/user", myUserRoute);
 app.use("/api/my/rent", myRentRoute);
 app.use("/api/rent", rentRoute);
 app.use("/api/order", orderRoute);
+app.use("/api/auth", authRoute);
 connectDB();
 app.listen(7000, () => {
   console.log("server started on localhost:7000");
