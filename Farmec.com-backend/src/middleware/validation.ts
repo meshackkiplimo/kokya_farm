@@ -24,7 +24,7 @@ export const validateMyUserRequest = [
     body("phoneNumber").isString().notEmpty().withMessage("phoneNumber must be a string"),
     
     
-    handleValidationErrors,
+    validate,
     
 
 
@@ -41,7 +41,7 @@ export const validateMyRentRequest =[
     body("categoryItems").isArray().withMessage("category items must be an  array"),
     body("categoryItems.*.name").notEmpty().withMessage("categoryItem name is required"),
     body("categoryItems.*.price").isFloat({min:0}).withMessage("categoryItem price is required"),
-    handleValidationErrors,
+    validate,
     
     
     
