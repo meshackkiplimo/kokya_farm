@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
 
-import myUserRoute from "./routes/MyUserRoute";
+// import myUserRoute from "./routes/MyUserRoute";
 import { v2 as cloudinary } from "cloudinary";
 import myRentRoute from "./routes/MyRentRoute";
 import rentRoute from "./routes/RentRoute";
@@ -27,7 +27,7 @@ app.use(express.json());
 
 
 
-app.use("/api/my/user", myUserRoute);
+// app.use("/api/my/user", myUserRoute);
 app.use("/api/my/rent", myRentRoute);
 app.use("/api/rent", rentRoute);
 app.use("/api/order", orderRoute);
