@@ -1,11 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from "./ui/button";
 import UsernameMenu from "./UsernameMenu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const MainNav = () => {
-  const { loginWithRedirect, isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth0();
+  const navigate = useNavigate();
 
   return (
     <span className="flex space-x-4 items-center ">
@@ -34,7 +35,7 @@ const MainNav = () => {
         <Button
           variant="ghost"
           className="font-bold hover:text-green-500 hover:bg-white"
-          onClick={async () => await loginWithRedirect()}
+          onClick={() => navigate('/register')}
         >
           Log In
         </Button>

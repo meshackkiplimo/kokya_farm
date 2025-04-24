@@ -4,9 +4,11 @@ import { Separator } from "@radix-ui/react-separator";
 import { Button } from "./ui/button";
 import { useAuth0 } from "@auth0/auth0-react";
 import MobileNavLinks from "./MobileNavLinks";
+import { useNavigate } from "react-router-dom";
 
 const MobileNav = () => {
-    const{isAuthenticated, loginWithRedirect,user}=useAuth0()
+    const{isAuthenticated, user}=useAuth0();
+    const navigate = useNavigate();
   return(
     <Sheet>
        <SheetTrigger>
@@ -32,7 +34,7 @@ const MobileNav = () => {
                 {isAuthenticated ? (
                 <MobileNavLinks/>
                 ) :(
-                       <Button onClick={()=>loginWithRedirect()} 
+                       <Button onClick={() => navigate('/register')}
                        className="flex-1 font-bold bg-green-500">Log in </Button>
               )}
               

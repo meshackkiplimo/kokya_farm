@@ -13,17 +13,9 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    
-    try {
-      await login(email, password);
-      navigate('/'); // Redirect to home page after successful login
-    } catch (error) {
-      setError('Invalid email or password');
-      console.error('Login failed:', error);
-    }
+    navigate('/register'); // Redirect to register page when login button is clicked
   };
 
   return (
