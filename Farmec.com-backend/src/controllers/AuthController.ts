@@ -3,24 +3,19 @@ import User from "../models/user";
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { auth0Id, email, firstName, lastName, address, town, county, phoneNumber } = req.body;
+    const { email, password, name } = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findOne({ auth0Id });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     // Create new user
     const user = new User({
-      auth0Id,
       email,
-      firstName,
-      lastName,
-      address,
-      town,
-      county,
-      phoneNumber,
+      password,
+      name
     });
 
     await user.save();
@@ -34,7 +29,7 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
-    const user = await User.findOne({ auth0Id: req.auth0Id });
+    const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -47,19 +42,14 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
 export const updateCurrentUser = async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, address, town, county, phoneNumber } = req.body;
-    const user = await User.findOne({ auth0Id: req.auth0Id });
+    const { name } = req.body;
+    const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.address = address;
-    user.town = town;
-    user.county = county;
-    user.phoneNumber = phoneNumber;
+    user.name = name;
 
     await user.save();
 
